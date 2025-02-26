@@ -17,9 +17,11 @@ class CreateReceiptsTable extends Migration
             $table->id();
             $table->integer('student_id');
             $table->integer('session_id');
-            $table->integer('fee_type');
             $table->string('months')->nullable();
-            $table->integer('amount');
+            $table->integer('admission_fee')->default(0);
+            $table->integer('monthly_fee')->default(0);
+            $table->integer('exam_fee')->default(0);
+            $table->integer('other_fee')->default(0);
             $table->timestamps();
         });
     }

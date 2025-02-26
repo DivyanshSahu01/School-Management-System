@@ -45,7 +45,7 @@
     <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
     <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
     <script src="assets/js/config.js"></script>
-    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="assets/js/vue.global.js"></script>
   </head>
 
   <body>
@@ -78,6 +78,12 @@
               <a href="income-expense" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-wallet"></i>
                 <div class="text-truncate" data-i18n="Tables">आय व्यय</div>
+              </a>
+            </li>
+            <li class="menu-item {{request()->is('fee-register') ? 'active' : ''}}">
+              <a href="fee-register" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-book-add"></i>
+                <div class="text-truncate" data-i18n="Tables">भुगतान सूची</div>
               </a>
             </li>
             <li class="menu-item {{request()->is('fee-pay') ? 'active' : ''}}">
@@ -172,9 +178,9 @@
                         <i class="bx bx-user bx-md me-3"></i><span>My Profile</span>
                       </a>
                     </li> -->
-                    <li>
+                    <!-- <li>
                       <a class="dropdown-item" href="#"> <i class="bx bx-cog bx-md me-3"></i><span>पासवर्ड बदलें</span> </a>
-                    </li>
+                    </li> -->
                     <!-- <li>
                       <a class="dropdown-item" href="#">
                         <span class="d-flex align-items-center align-middle">
@@ -184,9 +190,9 @@
                         </span>
                       </a>
                     </li> -->
-                    <li>
+                    <!-- <li>
                       <div class="dropdown-divider my-1"></div>
-                    </li>
+                    </li> -->
                     <li>
                       <a class="dropdown-item" href="/logout">
                         <i class="bx bx-power-off bx-md me-3"></i><span>लॉग आउट</span>

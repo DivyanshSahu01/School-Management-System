@@ -12,9 +12,15 @@ use App\Models\Receipt;
 class FeeController extends Controller
 {
     //
-    public function get(Request $request, $standard, $medium, $fee_type)
+    public function get(Request $request, $standard, $medium)
     {
-        $Fee = Fee::Select($fee_type.' AS fee')->Where('medium', $medium)->Where('standard', $standard)->first();
+        $Fee = Fee::Select('exam_fee', 'admission_fee', 'monthly_fee')->Where('medium', $medium)->Where('standard', $standard)->first();
+        $FeeTypes = [
+            ['type'=>'exam_fee', 'fee'=>$Fee->exam_fee, 'checked'=>false],
+            ['type'=>'admission_fee', 'fee'=>$Fee->admission_fee, 'checked'=>false],
+            ['type'=>'monthly_fee', 'fee'=>$Fee->monthly_fee, 'checked'=>false],
+            ['type'=>'other_fee', 'fee'=>0, 'checked'=>true],
+        ];
         return $Fee;
     }
 
@@ -32,15 +38,15 @@ class FeeController extends Controller
     public function pay(Request $request, $studentUUID)
     {
         $request->validate([
-            'fee_type'=> 'required',
-            'amount'=>'required|integer',
-            'months'=>'required'
+            'selectedFeeTypes'=>'required'
         ]);
 
         $session = Session::Where('is_active', 1)->first();
         $student = Student::Where('uuid', $studentUUID)->first();
-        $fee_type = $request->input('fee_type');
-        $amount = $request->input('amount');
+        $feeTypes = json_decode($request->input('selectedFeeTypes'));
+        $monthsArray = explode(",", $request->input('months'));
+        $noOfMonths = $request->input('months') == '' ? 0 : sizeof($monthsArray);
+        $monthlyFee = 0;
 
         if($student == null)
             return response()->json(['message'=>'Invalid student'], 400);
@@ -49,70 +55,63 @@ class FeeController extends Controller
 
         $studentFee = StudentFee::firstOrCreate(['session_id'=>$session->id, 'student_id'=>$student->id]);
 
-        if($studentFee != null)
+        $receipt = new Receipt();
+        $receipt->session_id = $session->id;
+        $receipt->student_id = $student->id;
+        $receipt->months = $request->input('months');
+
+        foreach($feeTypes as $feeType)
         {
-            if($fee_type == 'admission_fee')
+            if($feeType->type == 'admission_fee')
             {
-                $studentFee->admission_fee += $amount;
-                $studentFee->save();
+                $studentFee->admission_fee = $feeType->fee;
+                $receipt->admission_fee = $feeType->fee;
             }
-            else if($fee_type == 'exam_fee')
+            else if($feeType->type == 'exam_fee')
             {
-                $studentFee->exam_fee += $amount;
-                $studentFee->save();
+                $studentFee->exam_fee = $feeType->fee;
+                $receipt->exam_fee = $feeType->fee;
             }
-            else if($fee_type == 'monthly_fee')
+            else if($feeType->type == 'monthly_fee')
             {
-                $monthsArray = explode(",", $request->input('months'));
-                $monthMapping = [
-                    '1' => 'january',
-                    '2' => 'february',
-                    '3' => 'march',
-                    '4' => 'april',
-                    '5' => 'may',
-                    '6' => 'june',
-                    '7' => 'july',
-                    '8' => 'august',
-                    '9' => 'september',
-                    '10' => 'october',
-                    '11' => 'november',
-                    '12' => 'december',
-                ];
-
-                $updateData = [];
-                foreach($monthsArray as $month)
-                {
-                    if(isset($monthMapping[$month]))
-                    {
-                        $updateData[$monthMapping[$month]] = $amount/sizeof($monthsArray);
-                    }
-                }
-
-                // StudentFee::Where(['session_id'=>$session->id, 'student_id'=>$student->id])->update($updateData);
-                $studentFee->update($updateData);
+                $monthlyFee = $feeType->fee;
+                $receipt->monthly_fee = $monthlyFee * $noOfMonths;
             }
-            else if($fee_type == 'other_fee')
+            else if($feeType->type == 'other_fee')
             {
-                $studentFee->other_fee += $amount;
-                $studentFee->save();
+                $studentFee->other_fee = $feeType->fee;
+                $receipt->other_fee = $feeType->fee;
             }
-
-            $receipt = new Receipt();
-            $receipt->session_id = $session->id;
-            $receipt->student_id = $student->id;
-            $receipt->amount = $amount;
-            $receipt->fee_type = $fee_type;
-            if($fee_type == 3)
-            {
-                $receipt->months = $request->input('months');
-            }
-            else
-            {
-                $receipt->months = '';
-            }
-            $receipt->save();
         }
 
-        return response()->json($student);
+        $studentFee->save();
+        $receipt->save();
+
+        $monthMapping = [
+            '1' => 'january',
+            '2' => 'february',
+            '3' => 'march',
+            '4' => 'april',
+            '5' => 'may',
+            '6' => 'june',
+            '7' => 'july',
+            '8' => 'august',
+            '9' => 'september',
+            '10' => 'october',
+            '11' => 'november',
+            '12' => 'december',
+        ];
+
+        $updateData = [];
+        foreach($monthsArray as $month)
+        {
+            if(isset($monthMapping[$month]))
+            {
+                $updateData[$monthMapping[$month]] = $monthlyFee;
+            }
+        }
+        $studentFee->update($updateData);
+
+        return response()->json(['id' => $receipt->id]);
     }
 }

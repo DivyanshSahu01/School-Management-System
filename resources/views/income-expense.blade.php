@@ -27,11 +27,11 @@
           <th>राशि</th>
         </tr>
       </thead>
-      <tbody class="table-border-bottom-0">
-        <tr>
-          <td>Angular Project</td>
-          <td><span class="badge bg-label-warning">10</span></td>
-          <td><span class="badge bg-label-danger">7483487198</span></td>
+      <tbody class="table-border-bottom-0" >
+        <tr v-for="transaction in transactions">
+          <td>@{{transaction.created_at}}</td>
+          <td><span class="badge bg-label-warning">@{{transaction.description}}</span></td>
+          <td><span class="badge" :class="transaction.amount < 0 ? 'bg-label-danger': 'bg-label-success'">@{{transaction.amount}}</span></td>
         </tr>
       </tbody>
     </table>
@@ -45,27 +45,72 @@
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel3"><i class="menu-icon tf-icons bx bx-money-withdraw"></i>व्यय जोड़ें</h5>
       </div>
-      <div class="modal-body">
-        <div class="row mb-2">
-          <div class="col-12">
-            <label class="form-label">राशि</label>
-            <input class="form-control form-control-sm" type="text">
-          </div>
-          <div class="col-12">
-            <label for="exampleFormControlTextarea1" class="form-label">विवरण</label>
-            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+      <form @submit.prevent="saveExpense">
+        <div class="modal-body">
+          <div class="row mb-2">
+            <div class="col-12">
+              <label class="form-label">राशि</label>
+              <input class="form-control form-control-sm" v-model="formData.amount" type="text">
+            </div>
+            <div class="col-12">
+              <label for="exampleFormControlTextarea1" class="form-label">विवरण</label>
+              <textarea class="form-control" v-model="formData.description" id="exampleFormControlTextarea1" rows="3"></textarea>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn rounded-pill mx-2 btn-warning" data-bs-dismiss="modal">
-          बंद करें
-        </button>
-        <button type="button" class="btn rounded-pill btn-success">सेव करें</button>
-      </div>
+        <div class="modal-footer">
+          <button type="button" class="btn rounded-pill mx-2 btn-warning" data-bs-dismiss="modal">
+            बंद करें
+          </button>
+          <button type="submit" class="btn rounded-pill btn-success">सेव करें</button>
+        </div>
+      </form>
     </div>
   </div>
 </div>
 <!-- Modal -->
 <div class="content-backdrop fade"></div>
+@endsection
+
+@section('scripts')
+<script>
+  const app = Vue.createApp({
+      data() {
+          return {
+            formData: {},
+            transactions: []
+          }
+      },
+      mounted(){
+        this.listIncomeExpense();
+      },
+      methods: {
+        async listIncomeExpense() {
+          const response = await fetch("api/expense/list");
+          this.transactions = await response.json();
+        },
+        // editFee(fee) {
+        //   this.formData = {...fee};
+        //   $("#largeModal").modal('show');
+        // },
+        async saveExpense(){
+          const response = await fetch("api/expense/create", {
+            method:"POST",
+            headers: {
+              "Content-Type":"application/json"
+            },
+            body:JSON.stringify(this.formData)
+          });
+
+          if(response.ok)
+          {
+            $("#largeModal").modal('hide');
+            this.listIncomeExpense();
+          }
+        }
+      }
+  })
+
+  app.mount('#app');
+</script>
 @endsection

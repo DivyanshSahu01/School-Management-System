@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Models\Student;
+use App\Models\Session;
 
 class StudentController extends Controller
 {
@@ -51,6 +52,21 @@ class StudentController extends Controller
     public function list(Request $request)
     {
         $students = Student::get();
+        return $students;
+    }
+
+    public function listFees(Request $request, $standard)
+    {
+        $session = Session::Select('id')->Where('is_active', 1)->first();
+        if($session == null)
+        {
+            return response()->json(['message'=>'No session active'], 400);
+        }
+
+        $students = Student::Where('standard', $standard)->with(['StudentFee' => function ($query) use ($session) {
+            $query->where('session_id', $session->id);
+        }])->get();
+
         return $students;
     }
 

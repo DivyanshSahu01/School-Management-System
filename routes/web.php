@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ReceiptController;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,10 +44,12 @@ Route::middleware(['auth'])->group(function() {
     Route::get('/fee-pay', function () {
         return view('fee-pay');
     });
-    
-    Route::get('/print-receipt', function () {
-        return view('print-receipt');
+
+    Route::get('/fee-register', function () {
+        return view('fee-register');
     });
+
+    Route::get('/print-receipt/{id}', [ReceiptController::class, 'get']);
 });
 
 //// Redirect to login page if route not found

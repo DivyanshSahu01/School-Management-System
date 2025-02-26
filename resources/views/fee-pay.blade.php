@@ -40,22 +40,13 @@
       </div>
     </div>
     <div class="row mb-2">
-      <div class="col-4">
-        <label class="form-label">शुल्क</label>
-        <select class="form-select form-select-sm" id="exampleFormControlSelect1" v-model="formData.fee_type" @change="getFee" aria-label="Default select example">
-          <option value="" selected>शुल्क</option>
-          <option value="admission_fee">प्रवेश</option>
-          <option value="exam_fee">परीक्षा</option>
-          <option value="monthly_fee">मासिक</option>
-          <option value="other_fee">अन्य</option>
-        </select>
-      </div>
-      <div class="col-4">
-        <label class="form-label">फीस</label>
-        <input class="form-control form-control-sm" type="text" v-model="formData.amount" v-bind:disabled="formData.fee_type != 'other_fee'">
+      <div class="col-4" v-for="feeType in feeTypes">
+        <label class="form-label">@{{feeType.display}}</label>
+        <input class="form-control form-control-sm" type="text" v-model="feeType.fee" :disabled="feeType.type != 'other_fee'">
+        <input class="form-check-input" type="checkbox" v-model="feeType.checked" :disabled="feeType.type == 'other_fee'"/>
       </div>
     </div>
-    <div class="row mb-2" v-show="formData.fee_type == 'monthly_fee'">
+    <div class="row mb-2" v-show="feeTypes[2].checked">
       <div class="col-4" v-for="month in months" :key="month.id">
         <div class="form-check">
           <input class="form-check-input" type="checkbox" v-model="month.checked" />
@@ -85,6 +76,12 @@
           return {
             roll_no: '',
             formData: {},
+            feeTypes: [
+              {'type':'exam_fee', 'display':'परीक्षा शुल्क', 'fee':0, 'checked':false},
+              {'type':'admission_fee', 'display':'प्रवेश शुल्क', 'fee':0, 'checked':false},
+              {'type':'monthly_fee', 'display':'मासिक शुल्क', 'fee':0, 'checked':false},
+              {'type':'other_fee', 'display':'अन्य शुल्क', 'fee':0, 'checked':true}
+            ],
             months: [
               {
                 id: 1, name: "जनवरी", checked:false
@@ -100,43 +97,62 @@
       },
       computed: {
         totalAmount() {
-          if(this.formData.fee_type == 'monthly_fee')
-          {
-            let selectedMonths = this.months.filter(month => month.checked);
-            return this.formData.amount * selectedMonths.length;
-          }
+          let selectedMonths = this.months.filter(month => month.checked);
+          let sum = 0;
+          this.feeTypes.forEach(feeType => {
+            if(feeType.checked)
+            {
+              if(feeType.type == 'monthly_fee')
+              {
+                sum += parseFloat(feeType.fee) * selectedMonths.length;
+              }
+              else
+              {
+                sum += parseFloat(feeType.fee);
+              }
+            }
+          });
+          return sum;
 
-          return this.formData.amount;
+          return this.feeTypes.reduce((sum, fee) => fee.checked ? sum + parseFloat(fee.fee) : sum + 0, 0);
         }
       },
       methods: {
         async getByRollNo() {
           const response = await fetch("api/student/getByRollNo/" + this.roll_no);
           this.formData = await response.json();
+          this.getFee();
         },
         async getFee() {
-          if(this.formData.fee_type == 'other_fee')
-          {
-            this.formData.amount = 0;
-            return;
-          }
+          const response = await fetch("api/fee/get/" + this.formData.standard + "/" + this.formData.medium);
+          const result = await response.json();
 
-          const response = await fetch("api/fee/get/" + this.formData.standard + "/" + this.formData.medium + "/" + this.formData.fee_type);
-          const amount = (await response.json()).fee;
-          this.formData.amount = amount;
+          this.feeTypes[0].fee = result.exam_fee;
+          this.feeTypes[1].fee = result.admission_fee;
+          this.feeTypes[2].fee = result.monthly_fee;
         },
         async payFee() {
+          let selectedMonths = this.months.filter(month => month.checked).map(month => month.id);
+          let selectedFeeTypes = this.feeTypes.filter(feeType => feeType.checked);
+
           const response = await fetch("api/fee/pay/" + this.formData.uuid, {
             method:"POST",
             headers: {
               "Content-Type":"application/json"
             },
-            body:JSON.stringify(this.formData)
+            body:JSON.stringify
+            (
+              {
+                selectedFeeTypes: JSON.stringify(selectedFeeTypes),
+                months: selectedMonths.toString()
+              }
+            )
           });
 
           if(response.ok)
           {
-            window.open("print-receipt", '_blank');
+            const result = await response.json();
+            window.open("print-receipt/" + result.id, '_blank');
           }
         }
       }
