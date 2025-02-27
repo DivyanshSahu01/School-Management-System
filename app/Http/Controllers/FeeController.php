@@ -12,15 +12,13 @@ use App\Models\Receipt;
 class FeeController extends Controller
 {
     //
-    public function get(Request $request, $standard, $medium)
+    public function get(Request $request, $standard, $medium, $fee_type)
     {
         $Fee = Fee::Select('exam_fee', 'admission_fee', 'monthly_fee')->Where('medium', $medium)->Where('standard', $standard)->first();
-        $FeeTypes = [
-            ['type'=>'exam_fee', 'fee'=>$Fee->exam_fee, 'checked'=>false],
-            ['type'=>'admission_fee', 'fee'=>$Fee->admission_fee, 'checked'=>false],
-            ['type'=>'monthly_fee', 'fee'=>$Fee->monthly_fee, 'checked'=>false],
-            ['type'=>'other_fee', 'fee'=>0, 'checked'=>true],
-        ];
+        if($fee_type == 1)
+        {
+            $Fee->monthly_fee = $Fee->monthly_fee / 2;
+        }
         return $Fee;
     }
 

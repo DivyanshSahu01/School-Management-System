@@ -67,6 +67,15 @@
                   <h3 class="mb-0"><b>विद्यालय प्रबंधन प्रणाली</b></h3>
                 </a>
               </div>
+            
+              @if($errors->any())
+                @foreach ($errors->all() as $error)
+                  <div class="alert alert-danger alert-dismissible" role="alert">
+                    {{$error}}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>
+                @endforeach
+              @endif
 
               <form class="mb-6" action="/login" method="POST">
                 @csrf
@@ -77,7 +86,10 @@
                     class="form-control"
                     id="userid"
                     name="userid"
-                    autofocus />
+                    autofocus 
+                    required
+                    oninvalid="this.setCustomValidity('कृपया इसे भरें')"
+                    oninput="this.setCustomValidity('')"/>
                 </div>
 
                 <div class="mb-6 form-password-toggle">
@@ -89,7 +101,10 @@
                       class="form-control"
                       name="password"
                       placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
-                      aria-describedby="password" />
+                      aria-describedby="password" 
+                      required
+                      oninvalid="this.setCustomValidity('कृपया इसे भरें')"
+                      oninput="this.setCustomValidity('')"/>
                     <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
                   </div>
                 </div>

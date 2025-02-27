@@ -124,7 +124,7 @@
           this.getFee();
         },
         async getFee() {
-          const response = await fetch("api/fee/get/" + this.formData.standard + "/" + this.formData.medium);
+          const response = await fetch("api/fee/get/" + this.formData.standard + "/" + this.formData.medium + "/" + this.formData.fee_type);
           const result = await response.json();
 
           this.feeTypes[0].fee = result.exam_fee;

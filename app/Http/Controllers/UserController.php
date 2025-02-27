@@ -28,7 +28,7 @@ class UserController extends Controller
         }
 
         return back()->withErrors([
-            'error' => 'Invalid credentials.',
+            'error' => 'प्रयोक्ता नाम या पासवर्ड गलत है',
         ]);
     }
 }

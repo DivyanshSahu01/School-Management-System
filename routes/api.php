@@ -33,7 +33,7 @@ Route::prefix('student')->group(function () {
 });
 
 Route::prefix('fee')->group(function() {
-    Route::get('/get/{standard}/{medium}', [FeeController::class, 'get']);
+    Route::get('/get/{standard}/{medium}/{fee_type}', [FeeController::class, 'get']);
     Route::get('/list/{medium}', [FeeController::class, 'list']);
     Route::post('/edit/{standard}/{medium}', [FeeController::class, 'edit']);
     Route::post('/pay/{studentUUID}', [FeeController::class, 'pay']);
@@ -44,6 +44,6 @@ Route::prefix('receipt')->group(function() {
 });
 
 Route::prefix('expense')->group(function() {
-    Route::get('/list', [ExpenseController::class, 'list']);
+    Route::get('/list/{fromDate}/{toDate}', [ExpenseController::class, 'list']);
     Route::post('/create', [ExpenseController::class, 'create']);
 });
