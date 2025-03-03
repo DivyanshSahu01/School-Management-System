@@ -4,18 +4,11 @@
   <h4 class="card-header">
     <i class="menu-icon tf-icons bx bx-receipt"></i>
     <b>शुल्क भुगतान</b>
-    &nbsp;&nbsp;
-    <div class="d-inline-block mx-2">
-      <select class="form-select" id="exampleFormControlSelect1" aria-label="Default select example">
-        <option value="" selected>कक्षा</option>
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-      </select>
-    </div>
+    &nbsp;
     <div class="d-inline-block">
       <input class="form-control form-control-sm" type="text" v-model="roll_no">
     </div>
+    &nbsp;
     <button type="button" class="btn btn-sm rounded-pill btn-info" @click="getByRollNo">
       <i class="menu-icon tf-icons bx bx-search"></i>
     </button>

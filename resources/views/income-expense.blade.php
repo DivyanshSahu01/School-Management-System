@@ -2,9 +2,9 @@
 @section('content')
 <div class="card">
   <h4 class="card-header">
-    <i class="menu-icon tf-icons bx bx-wallet"></i>
-    <b>आय-व्यय</b>
     <form @submit.prevent="listIncomeExpense">
+      <i class="menu-icon tf-icons bx bx-wallet"></i>
+      <b>आय-व्यय</b>&nbsp;&nbsp;
       <div class="d-inline-block">
         <input type="date" v-model="fromDate" class="form-control" required oninvalid="this.setCustomValidity('कृपया इसे भरें')" oninput="this.setCustomValidity('')">      
       </div>

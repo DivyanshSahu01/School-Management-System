@@ -12,8 +12,11 @@ use App\Models\Receipt;
 class FeeController extends Controller
 {
     //
-    public function get(Request $request, $standard, $medium, $fee_type)
+    public function get(Request $request, $roll_no, $standard, $medium, $fee_type)
     {
+        $student = Student::where('roll_no', $roll_no)->first();
+        return $student;
+
         $Fee = Fee::Select('exam_fee', 'admission_fee', 'monthly_fee')->Where('medium', $medium)->Where('standard', $standard)->first();
         if($fee_type == 1)
         {

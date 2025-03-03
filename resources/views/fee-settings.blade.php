@@ -6,7 +6,6 @@
     <b>सेटिंग्स</b>
     <div class="d-inline-block mx-2">
       <select class="form-select" id="exampleFormControlSelect1" v-model="medium" aria-label="Default select example" @change="listFees(medium)">
-        <option value="" selected>मध्यम</option>
         <option value="1">अंग्रेज़ी</option>
         <option value="2">हिन्दी</option>
       </select>
@@ -63,26 +62,26 @@
           </div>
           <div class="row mb-2">
             <div class="col-12">
-              <label class="form-label">मध्यम</label>
+              <label class="form-label">माध्यम</label>
               <input class="form-control form-control-sm" type="text" v-model="formData.medium" disabled>
             </div>
           </div>
           <div class="row mb-2">
             <div class="col-12">
               <label class="form-label">प्रवेश शुल्क</label>
-              <input class="form-control form-control-sm" type="text" v-model="formData.admission_fee">
+              <input class="form-control form-control-sm" type="number" v-model="formData.admission_fee" required oninvalid="this.setCustomValidity('कृपया इसे भरें')" oninput="this.setCustomValidity('')">
             </div>
           </div>
           <div class="row mb-2">
             <div class="col-12">
               <label class="form-label">परीक्षा शुल्क</label>
-              <input class="form-control form-control-sm" type="text" v-model="formData.exam_fee">
+              <input class="form-control form-control-sm" type="number" v-model="formData.exam_fee" required oninvalid="this.setCustomValidity('कृपया इसे भरें')" oninput="this.setCustomValidity('')">
             </div>
           </div>
           <div class="row mb-2">
             <div class="col-12">
               <label class="form-label">मासिक शुल्क</label>
-              <input class="form-control form-control-sm" type="text" v-model="formData.monthly_fee">
+              <input class="form-control form-control-sm" type="number" v-model="formData.monthly_fee" required oninvalid="this.setCustomValidity('कृपया इसे भरें')" oninput="this.setCustomValidity('')">
             </div>
           </div>
         </div>

@@ -28,7 +28,7 @@ Route::prefix('student')->group(function () {
     Route::get('/get/{uuid}', [StudentController::class, 'get']);
     Route::get('/getByRollNo/{roll_no}', [StudentController::class, 'getByRollNo']);
     Route::get('/list', [StudentController::class, 'list']);
-    Route::get('/listFees/{standard}', [StudentController::class, 'listFees']);
+    Route::get('/listFees', [StudentController::class, 'listFees']);
     Route::delete('/delete/{uuid}', [StudentController::class, 'delete']);
 });
 
