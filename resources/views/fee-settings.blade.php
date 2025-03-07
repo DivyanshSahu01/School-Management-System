@@ -2,7 +2,7 @@
 @section('content')
 <div class="card">
   <h4 class="card-header">
-    <i class="menu-icon tf-icons bx bx-table"></i>
+    <i class="menu-icon tf-icons bx bx-cog"></i>
     <b>सेटिंग्स</b>
     <div class="d-inline-block mx-2">
       <select class="form-select" id="exampleFormControlSelect1" v-model="medium" aria-label="Default select example" @change="listFees(medium)">
@@ -50,7 +50,7 @@
   <div class="modal-dialog modal-sm" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel3">Modal title</h5>
+        <h5 class="modal-title" id="exampleModalLabel3"><i class="bx bx-edit-alt me-1"></i> शुल्क विवरण</h5>
       </div>
       <form @submit.prevent="saveFee">
         <div class="modal-body">
@@ -114,6 +114,7 @@
       },
       methods: {
         async listFees(medium) {
+          this.fees = [];
           const response = await fetch("api/fee/list/"+medium);
           this.fees = await response.json();
         },

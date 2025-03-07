@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\Fee;
 use App\Models\Session;
 use App\Models\User;
+use App\Models\Student;
 
 class DatabaseSeeder extends Seeder
 {
@@ -55,5 +56,8 @@ class DatabaseSeeder extends Seeder
 
         User::truncate();
         User::upsert([['userid'=>'admin123', 'password'=>Hash::make('12345'), 'role'=>'admin'], ['userid'=>'user123', 'password'=>Hash::make('12345'), 'role'=>'other']], [], []);
+
+        Student::truncate();
+        Student::factory()->count(20)->create();
     }
 }

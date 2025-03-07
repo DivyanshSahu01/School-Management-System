@@ -19,7 +19,7 @@
     <meta name="description" content="" />
 
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="assets/img/icons/school.png" />
+    <link rel="icon" type="image/x-icon" href="/assets/img/icons/school.png" />
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -28,24 +28,24 @@
       href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
       rel="stylesheet" />
 
-    <link rel="stylesheet" href="assets/vendor/fonts/boxicons.css" />
+    <link rel="stylesheet" href="/assets/vendor/fonts/boxicons.css" />
 
     <!-- Core CSS -->
-    <link rel="stylesheet" href="assets/vendor/css/core.css" class="template-customizer-core-css" />
-    <link rel="stylesheet" href="assets/vendor/css/theme-default.css" class="template-customizer-theme-css" />
-    <link rel="stylesheet" href="assets/css/demo.css" />
+    <link rel="stylesheet" href="/assets/vendor/css/core.css" class="template-customizer-core-css" />
+    <link rel="stylesheet" href="/assets/vendor/css/theme-default.css" class="template-customizer-theme-css" />
+    <link rel="stylesheet" href="/assets/css/demo.css" />
 
     <!-- Vendors CSS -->
-    <link rel="stylesheet" href="assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
+    <link rel="stylesheet" href="/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
 
     <!-- Page CSS -->
 
     <!-- Helpers -->
-    <script src="assets/vendor/js/helpers.js"></script>
+    <script src="/assets/vendor/js/helpers.js"></script>
     <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
     <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
-    <script src="assets/js/config.js"></script>
-    <script src="assets/js/vue.global.js"></script>
+    <script src="/assets/js/config.js"></script>
+    <script src="/assets/js/vue.global.js"></script>
   </head>
 
   <body>
@@ -56,8 +56,8 @@
 
         <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
           <div class="app-brand demo">
-            <a href="index.html" class="app-brand-link">
-              <img src="assets/img/icons/school.png" width="20">&nbsp;&nbsp;
+            <a href="javascript:void(0);" class="app-brand-link">
+              <img src="/assets/img/icons/school.png" width="20">&nbsp;&nbsp;
               <b class="text-dark">{{env('APP_NAME')}}</b>
             </a>
 
@@ -69,32 +69,32 @@
           <ul class="menu-inner py-1">
             <!-- Tables -->
             <li class="menu-item {{request()->is('student-list') ? 'active' : ''}}">
-              <a href="student-list" class="menu-link">
+              <a href="/student-list" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-table"></i>
                 <div class="text-truncate" data-i18n="Tables">छात्र सूची</div>
               </a>
             </li>
             <li class="menu-item {{request()->is('income-expense') ? 'active' : ''}}">
-              <a href="income-expense" class="menu-link">
+              <a href="/income-expense" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-wallet"></i>
                 <div class="text-truncate" data-i18n="Tables">आय व्यय</div>
               </a>
             </li>
             <li class="menu-item {{request()->is('fee-register') ? 'active' : ''}}">
-              <a href="fee-register" class="menu-link">
+              <a href="/fee-register" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-book-add"></i>
                 <div class="text-truncate" data-i18n="Tables">भुगतान सूची</div>
               </a>
             </li>
             <li class="menu-item {{request()->is('fee-pay') ? 'active' : ''}}">
-              <a href="fee-pay" class="menu-link">
+              <a href="/fee-pay" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-receipt"></i>
                 <div class="text-truncate" data-i18n="Tables">शुल्क भुगतान</div>
               </a>
             </li>
             @if(Auth::user()->role == 'admin')
               <li class="menu-item {{request()->is('fee-settings') ? 'active' : ''}}">
-                <a href="fee-settings" class="menu-link">
+                <a href="/fee-settings" class="menu-link">
                   <i class="menu-icon tf-icons bx bx-cog"></i>
                   <div class="text-truncate" data-i18n="Tables">सेटिंग्स</div>
                 </a>
@@ -228,18 +228,18 @@
     <!-- Core JS -->
     <!-- build:js assets/vendor/js/core.js -->
 
-    <script src="assets/vendor/libs/jquery/jquery.js"></script>
-    <script src="assets/vendor/libs/popper/popper.js"></script>
-    <script src="assets/vendor/js/bootstrap.js"></script>
-    <script src="assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
-    <script src="assets/vendor/js/menu.js"></script>
+    <script src="/assets/vendor/libs/jquery/jquery.js"></script>
+    <script src="/assets/vendor/libs/popper/popper.js"></script>
+    <script src="/assets/vendor/js/bootstrap.js"></script>
+    <script src="/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
+    <script src="/assets/vendor/js/menu.js"></script>
 
     <!-- endbuild -->
 
     <!-- Vendors JS -->
 
     <!-- Main JS -->
-    <script src="assets/js/main.js"></script>
+    <script src="/assets/js/main.js"></script>
     @yield('scripts')
     <!-- Page JS -->
 

@@ -12,17 +12,51 @@ use App\Models\Receipt;
 class FeeController extends Controller
 {
     //
-    public function get(Request $request, $roll_no, $standard, $medium, $fee_type)
+    public function get(Request $request, $roll_no)
     {
+        $session = Session::Where('is_active', 1)->first();
         $student = Student::where('roll_no', $roll_no)->first();
-        return $student;
+        $studentFee = StudentFee::firstOrCreate(['session_id'=>$session->id, 'student_id'=>$student->id]);
+        $studentFee->refresh();
+        $monthMapping = [
+            'january' => 1,
+            'february' => 2,
+            'march' => 3,
+            'april' => 4,
+            'may' => 5,
+            'june' => 6,
+            'july' => 7,
+            'august' => 8,
+            'september' => 9,
+            'october' => 10,
+            'november' => 11,
+            'december' => 12,
+        ];
 
-        $Fee = Fee::Select('exam_fee', 'admission_fee', 'monthly_fee')->Where('medium', $medium)->Where('standard', $standard)->first();
-        if($fee_type == 1)
+        $monthsArray = [];
+        foreach($monthMapping as $month=>$number)
+        {
+            if($studentFee->$month > 0)
+            {
+                $monthsArray[] = $number;
+            }
+        }
+
+        $Fee = Fee::Select('exam_fee', 'admission_fee', 'monthly_fee')->Where('medium', $student->medium)->Where('standard', $student->standard)->first();
+
+        if($student->fee_type == 1)
         {
             $Fee->monthly_fee = $Fee->monthly_fee / 2;
         }
-        return $Fee;
+        
+        $student->medium = $student->medium == 1 ? 'अंग्रेज़ी' : 'हिन्दी';
+        return 
+        [
+            "student"=>$student,
+            "studentFee"=>$studentFee,
+            "Fee"=>$Fee,
+            "paidMonths"=>$monthsArray
+        ];
     }
 
     public function edit(Request $request, $standard, $medium)
@@ -80,7 +114,7 @@ class FeeController extends Controller
             }
             else if($feeType->type == 'other_fee')
             {
-                $studentFee->other_fee = $feeType->fee;
+                $studentFee->other_fee += $feeType->fee;
                 $receipt->other_fee = $feeType->fee;
             }
         }

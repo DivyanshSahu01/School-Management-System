@@ -41,8 +41,8 @@ Route::middleware(['auth'])->group(function() {
         return view('fee-settings');
     });
     
-    Route::get('/fee-pay', function () {
-        return view('fee-pay');
+    Route::get('/fee-pay/{roll_no?}', function ($roll_no = '') {
+        return view('fee-pay', ['roll_no' => $roll_no]);
     });
 
     Route::get('/fee-register', function () {

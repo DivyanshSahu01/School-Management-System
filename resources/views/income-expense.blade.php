@@ -56,7 +56,7 @@
           <div class="row mb-2">
             <div class="col-12">
               <label class="form-label">राशि</label>
-              <input class="form-control form-control-sm" v-model="formData.amount" type="number" required oninvalid="this.setCustomValidity('कृपया इसे भरें')" oninput="this.setCustomValidity('')">
+              <input class="form-control form-control-sm" v-model="formData.amount" pattern="[0-9]+" type="text" required oninvalid="this.setCustomValidity('कृपया इसे भरें')" oninput="this.setCustomValidity('')">
             </div>
             <div class="col-12">
               <label for="exampleFormControlTextarea1" class="form-label">विवरण</label>
@@ -85,7 +85,8 @@
           return {
             formData: {},
             transactions: [],
-            totalAmount: 0
+            totalAmount: 0,
+            loading: false
           }
       },
       methods: {
@@ -99,6 +100,10 @@
         //   $("#largeModal").modal('show');
         // },
         async saveExpense(){
+          if (this.loading) 
+            return;
+
+          this.loading = true;
           const response = await fetch("api/expense/create", {
             method:"POST",
             headers: {
@@ -111,6 +116,7 @@
           {
             $("#largeModal").modal('hide');
             this.listIncomeExpense();
+            this.loading = false;
           }
         }
       }

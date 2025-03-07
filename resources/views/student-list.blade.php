@@ -3,7 +3,7 @@
 <div class="card">
   <h4 class="card-header">
     <i class="menu-icon tf-icons bx bx-table"></i>
-    <b>छात्र सूची</b>
+    <b>छात्र सूची&nbsp;<span class="badge badge-center rounded-pill bg-warning">@{{filteredStudents.length}}</span></b>
     <div class="d-inline-block mx-2">
       <select class="form-select" v-model="standard" aria-label="Default select example">
         <option value="" selected>कक्षा</option>
@@ -54,7 +54,7 @@
                 <a class="dropdown-item" @click="editStudent(student)" href="javascript:void(0);"
                   ><i class="bx bx-edit-alt me-1"></i> एडिट</a
                 >
-                <a class="dropdown-item" href="javascript:void(0);"
+                <a class="dropdown-item" @click="showDeleteModal(student.uuid)" href="javascript:void(0);"
                   ><i class="bx bx-trash me-1"></i> हटाए</a
                 >
               </div>
@@ -72,7 +72,7 @@
   <div class="modal-dialog modal-md" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Modal title</h5>
+        <h5 class="modal-title"><i class="menu-icon tf-icons bx bx-user"></i> छात्र विवरण</h5>
       </div>
       <form @submit.prevent="saveStudent">
         <div class="modal-body">
@@ -152,6 +152,34 @@
   </div>
 </div>
 <!-- Modal -->
+
+<div class="modal fade" id="largeModal1" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-md" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="bx bx-trash me-1"></i> छात्र हटाएं</h5>
+      </div>
+      <form @submit.prevent="deleteStudent">
+        <div class="modal-body">
+          <div class="alert alert-danger alert-dismissible" v-show="errorMessage != ''" role="alert">
+            @{{errorMessage}}
+          </div>
+          <div class="row mb-2">
+            <div class="col-12">
+              क्या आप इस छात्र को स्थायी रूप से हटाना चाहते हैं?
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn rounded-pill mx-2 btn-warning" data-bs-dismiss="modal">
+            नहीं
+          </button>
+          <button type="submit" class="btn rounded-pill btn-success">हाँ</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 <div class="content-backdrop fade"></div>
 @endsection
 
@@ -164,6 +192,7 @@
             formData: {},
             search_data: '',
             errorMessage: '',
+            studentUUID: '',
             standard: '',
             editMode:false
           }
@@ -198,6 +227,26 @@
           this.editMode = true;
           this.formData = {...student};
           $("#largeModal").modal('show');
+        },
+        showDeleteModal(studentUUID){
+          this.studentUUID = studentUUID;
+          $("#largeModal1").modal('show');
+        },
+        async deleteStudent(){
+          url = "api/student/delete/" + this.studentUUID;
+
+          const response = await fetch(url, {
+            method: "DELETE",
+            headers: {
+              "Content-Type":'application/json'
+            }
+          });
+
+          if(response.ok)
+          {
+            this.listStudents();
+            $("#largeModal1").modal('hide');
+          }
         },
         async saveStudent() {
           if(this.editMode)

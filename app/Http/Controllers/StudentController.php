@@ -43,12 +43,6 @@ class StudentController extends Controller
         return $student;
     }
 
-    public function getByRollNo(Request $request, $roll_no)
-    {
-        $student = Student::where('roll_no', $roll_no)->first();
-        return $student;
-    }
-
     public function list(Request $request)
     {
         $students = Student::get();

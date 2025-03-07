@@ -2,8 +2,8 @@
 @section('content')
 <div class="card">
   <h4 class="card-header">
-    <i class="menu-icon tf-icons bx bx-table"></i>
-    <b>भुगतान सूची</b>
+    <i class="menu-icon tf-icons bx bx-book-add"></i>
+    <b>भुगतान सूची&nbsp;<span class="badge badge-center rounded-pill bg-warning">@{{filteredStudents.length}}</span></b>
     <div class="d-inline-block mx-2">
       <select class="form-select" v-model="standard" aria-label="Default select example">
         <option value="" selected>कक्षा</option>
@@ -74,6 +74,7 @@
                 <i class="bx bx-dots-vertical-rounded"></i>
               </button>
               <div class="dropdown-menu">
+                <a class="dropdown-item" :href="'/fee-pay/' + student.roll_no"><i class="bx bx-file me-1"></i> भुगतान करें</a>
                 <a class="dropdown-item" @click="listReceipts(student.uuid)" href="javascript:void(0);"><i class="bx bx-receipt me-1"></i> रसीद</a>
               </div>
             </div>
@@ -90,7 +91,7 @@
   <div class="modal-dialog modal-md" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Modal title</h5>
+        <h5 class="modal-title"><i class="bx bx-receipt me-1"></i>&nbsp;रसीद</h5>
       </div>
       <div class="modal-body">
         <div class="row mb-2">
@@ -110,7 +111,7 @@
                   <td>@{{receipt.admission_fee + receipt.exam_fee + receipt.other_fee + receipt.monthly_fee}}</td>
                   <td>@{{receipt.created_at}}</td>
                   <td>
-                    <a class="dropdown-item" v-bind:href="'print-receipt/'+receipt.id" target="_blank"><i class="bx bx-receipt me-1"></i></a>
+                    <a class="dropdown-item" :href="'/print-receipt/' + receipt.id" target="_blank"><i class="bx bx-receipt me-1"></i></a>
                   </td>
                 </tr>
               </tbody>
